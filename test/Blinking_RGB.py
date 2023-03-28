@@ -3,6 +3,9 @@ import neopixel
 import time
 from time import sleep
 
+rx = UART(Pin(12), 9600)
+uart.init(9600, bits=8, parity=None, stop=1)
+
 strip = neopixel.NeoPixel(Pin(22), 50)
 fan = neopixel.NeoPixel(Pin(28), 6)
 
@@ -28,8 +31,8 @@ fan.write()
 
 # Configure the RGB pins for Ultra Bright LEDs
 pwmR = PWM(Pin(9))
-pwmG = PWM(Pin(10))
-pwmB = PWM(Pin(11))
+pwmG = PWM(Pin(11))
+pwmB = PWM(Pin(10))
 pwmR.freq(100)
 pwmB.freq(100)
 pwmG.freq(100)
@@ -56,9 +59,19 @@ class Blue:
     colour = pwmB
     
 class Yellow:
-    fan = (180, 255, 0)
-    strip = (180, 0, 255)
+    fan = (255, 255, 0)
+    strip = (255, 0, 255)
     colour = pwmB
+
+def black():
+    fan.fill(BLACK)
+    strip.fill(BLACK)
+    strip.write()
+    fan.write()
+    pwmR.duty_u16(low)
+    pwmG.duty_u16(low)
+    pwmB.duty_u16(low)
+
     
 # Clear output light devices
 fan.fill(BLACK)
@@ -97,7 +110,7 @@ def blink(colour, wait):
     strip.write()
     fan.write()
     sleep(wait)
-
+    black()
     
 while True:
 #     for i in range(5):
@@ -106,7 +119,14 @@ while True:
 #     diming(pwmB, 1)
 #     diming(pwmG, 1)
 
-    blink(Red, 1)
-    blink(Green, 1)
-    blink(Blue, 1)
-    blink(Yellow, 1)
+    colour = uart.read(1)
+    
+    
+    if (colour == 'R')
+        blink(Red, 1)
+    else if (colour == 'G')
+        blink(Green, 1)
+    else if (colour == 'B')
+        blink(Blue, 1)
+    else
+        black()
